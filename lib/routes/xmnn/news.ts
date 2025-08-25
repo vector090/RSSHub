@@ -16,7 +16,7 @@ async function handler(ctx) {
     const { category = 'xmxw' } = ctx.req.param();
     const limit = ctx.req.query('limit') ? Number.parseInt(ctx.req.query('limit'), 10) : 30;
 
-    const rootUrl = 'https://news.xmnn.cn';
+    const rootUrl = 'https://news.xmrb.cn';
     const currentUrl = new URL(`${category}/`, rootUrl).href;
 
     const { data: response } = await got(currentUrl);

@@ -20,7 +20,7 @@ export const route: Route = {
     },
     radar: [
         {
-            source: ['epaper.xmnn.cn/:id'],
+            source: ['epaper.xmrb.cn/:id'],
             target: '/epaper/:id',
         },
     ],
@@ -35,7 +35,7 @@ export const route: Route = {
 async function handler(ctx) {
     const id = ctx.req.param('id') ?? 'xmrb';
 
-    const rootUrl = 'https://epaper.xmnn.cn';
+    const rootUrl = 'https://epaper.xmrb.cn';
     let currentUrl = `${rootUrl}/${id === 'hxcb' ? '/hxcb/epaper/paperindex.htm' : `${id}/`}`;
 
     let response = await got({
@@ -44,10 +44,14 @@ async function handler(ctx) {
     });
 
     let $ = load(response.data);
+    // console.log("response.data", response.data  )
 
     const title = id === 'hxcb' ? '海西晨报电子版_厦门网' : $('title').text();
 
-    let matches = response.data.match(/window\.location\.href = "(.*?)";/);
+    // console.log("title", title);
+
+    let matches = response.data.match(/location\.href="(.\/pc.*?)";/);
+    // console.log("matches", matches);
 
     if (!matches) {
         matches = response.data.match(/setTimeout\("javascript:location\.href='(.*?)'", 3000\);/);
@@ -58,11 +62,14 @@ async function handler(ctx) {
     }
 
     currentUrl = new URL(matches[1], currentUrl).href;
+    // console.log("currentUrl", currentUrl);
 
     response = await got({
         method: 'get',
         url: currentUrl,
     });
+
+    // console.log("response.data", response.data  )
 
     $ = load(response.data);
 
@@ -73,9 +80,18 @@ async function handler(ctx) {
         $(this).parent().remove();
     });
 
-    let items = $('.br1, .br2, .titss')
+    // let list1 = $('#list')
+    //    // .find('a')
+    //    ;
+    // console.log("list1", list1);
+    // console.log("find a", list1.find("a"));
+    // console.log("find img", list1.find("img"));
+
+    // let items = $('.clearfix')
+    // let items = $('.posRelative')
+    let items = $('#list')
         .find('a')
-        .slice(0, ctx.req.query('limit') ? Number.parseInt(ctx.req.query('limit')) : 80)
+        // .slice(0, ctx.req.query('limit') ? Number.parseInt(ctx.req.query('limit')) : 80)
         .toArray()
         .map((item) => {
             item = $(item);
