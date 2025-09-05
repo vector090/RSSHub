@@ -1,19 +1,12 @@
 {
-<<<<<<< Updated upstream
-    "framework": null,
-    "github": { "silent": true },
-    "routes": [{ "src": "/.*", "dest": "/api/vercel.js" }]
-}
-=======
-  "version": 2,
-  "buildCommand": "npm install --legacy-peer-deps && npm run build:vercel",
-  "outputDirectory": "dist",
   "framework": null,
+  "github": {
+    "silent": true
+  },
   "routes": [
     {
       "src": "/.*",
-      "dest": "/index.ts"
+      "dest": "/api/vercel.js"
     }
   ]
 }
->>>>>>> Stashed changes
