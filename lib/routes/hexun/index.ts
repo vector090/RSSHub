@@ -4,8 +4,7 @@ import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { load } from 'cheerio';
 import { parseDate } from '@/utils/parse-date';
-
-const decoder = new TextDecoder('gbk');
+import iconv from 'iconv-lite';
 
 export const route: Route = {
     path: '/pe/news',
@@ -23,10 +22,10 @@ async function handler() {
     const response = await got({
         method: 'get',
         url: baseUrl,
-        responseType: 'arrayBuffer',
+        responseType: 'buffer',
     });
 
-    const $ = load(decoder.decode(response.data));
+    const $ = load(iconv.decode(response.data, 'gbk'));
 
     const list = $('.listNews li')
         .toArray()
@@ -54,10 +53,10 @@ async function handler() {
                 const response = await got({
                     method: 'get',
                     url: item.link,
-                    responseType: 'arrayBuffer',
+                    responseType: 'buffer',
                 });
 
-                const $ = load(decoder.decode(response.data));
+                const $ = load(iconv.decode(response.data, 'gbk'));
 
                 item.description = $('.art_contextBox').html() || '';
 
